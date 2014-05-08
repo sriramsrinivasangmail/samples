@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<TITLE>
+Sample content
+</TITLE>
+<script>
+function setWindowHash()
+{
+	console.log('current hash is', window.location.hash);
+	window.location.hash='bluwelcome';
+	console.log('new hash is:', window.location.hash);
+}
+function setIframeHash()
+{
+	console.log('current hash is', document.location.hash);
+	location.hash='bluwelcome';
+	console.log('new hash is:', document.location.hash);
+}
+function getHash()
+{
+	console.log('current hash is', document.location.hash);
+}
+function postMessage()
+{
+	window.parent.postMessage("Test message", "*");
+}
+
+function postMessageObject()
+{
+	var msgContext = 
+	{
+		postTopic: "/wti/app/launchTask",
+		taskID: "bluwelcome",
+		launchParams: {paramKey1: "updVal1", paramKey2: "updVal2", paramKey3: "newVal3"} 
+	};
+	window.parent.postMessage(JSON.stringify(msgContext), "*");
+}
+
+function launchTask(taskID)
+{
+	var msgContext = 
+	{
+		postTopic: "/wti/app/launchTask",
+		taskID: taskID
+	};
+	window.parent.postMessage(JSON.stringify(msgContext), "*");
+}
+
+function showHelpURL(url)
+{
+	var msgContext = 
+	{
+		postTopic: "/wti/app/showHelpURL",
+		url: url,
+		forceOpen: true
+	
+	};
+	window.parent.postMessage(JSON.stringify(msgContext), "*");
+}
+
+</script>
+</HEAD>
+<BODY>
+
+<ul>
+<li>
+        post launch task ... <A HREF="#" onclick="launchTask('bluwelcome')"> blu welcome</a> 
+</li>
+<li>
+        post show  help URL ... <A HREF="#" onclick="showHelpURL('/com.ibm.datatools.dsweb.blushift.doc/topics/createschema.html')"> open create schema help </a> 
+</li>
+<li>
+        top... javascript launch task: <A HREF="javascript:top.headerFrame.launchTask('bluwelcome')">launch blu welcome</a> (Should not work inside of a cross-domain iframe)
+</li>
+<li>
+        with parent... javascript launch task: <A HREF="javascript:parent.headerFrame.launchTask('bluwelcome')">launch blu welcome</a> (Should not work inside of an iframe cross-domain)
+</li>
+<li>
+        set my doc hash ... <A HREF="#name"> set hash </a> 
+</li>
+<li>
+        console log doc hash ... <A HREF="" onclick="getHash()"> get hash </a> 
+</li>
+<li>
+        post message ... <A HREF="#" onclick="postMessageObject()"> post</a> 
+</li>
+</ul>
+
+</BODY>
+</HTML>
