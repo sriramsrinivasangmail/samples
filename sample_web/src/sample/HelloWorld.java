@@ -33,7 +33,7 @@ public class HelloWorld extends HttpServlet
 	{
 		PrintWriter p = response.getWriter();
         p.println("<BODY>");
-        p.println("<H2>Hello World ! </H2>");
+        p.println("<Center>Hello World ! </Center>");
         p.println("</BODY>");
 	}
 
