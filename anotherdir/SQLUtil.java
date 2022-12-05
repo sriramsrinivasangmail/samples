@@ -7,6 +7,8 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.BatchUpdateException;
 import java.sql.Clob;
+
+import java.sql.Driver;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ParameterMetaData;
@@ -23,9 +25,56 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class SQLUtil
 {
+    
+    /**
+     * 
+     * @param cl optional. if null, then this method just does a "Class.forName"
+     * @param driverClassName
+     * @return
+     * @throws Throwable
+     */
+    public static Driver loadJDBDriver(ClassLoader cl, String driverClassName) throws Throwable
+    {
+        
+        Driver jdbcDriver = null;
+        
+        Class driverClass = null;
+        
+        try
+        {
+            driverClass = Class.forName(driverClassName);
+        }
+        catch (Exception e)
+        {
+        }
+        
+        if ((null == driverClass) && (null != cl))
+        {
+            driverClass = cl.loadClass(driverClassName);
+        }
+        
+        if (null == driverClass)
+        {
+            throw new IllegalArgumentException(" Cannot load: " + driverClass);
+        }
+        
+        try
+        {
+            jdbcDriver = (Driver) driverClass.newInstance();
+        }
+        catch (Throwable t)
+        {
+            System.err.println("Failed to load instantiate driver for: " + driverClass);
+            t.printStackTrace();
+            throw t;
+        }
+        return jdbcDriver;
+    }
+
     /**
      * YOU MUST call close() right below to close the result set and the
      * statement !
