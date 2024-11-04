@@ -10,5 +10,9 @@ VOL_MNT="-v ${PWD}/src:/src"
 ### this script takes the expression file and json source file as arguments
 E_PT="--entrypoint=/src/transform.sh"
 
-## run the transfrom inside the container, operating on the json files in the ./src directory
-podman run --rm -it ${VOL_MNT} ${E_PT} ${IMAGE} /src/convert.jsonata /src/example-01.json
+## run the transform script inside the container as the current user (root is not required)
+## operating on the json files in the ./src directory passed as an arg to the entrypoint script
+
+## tip: export PODMAN_ARCH="--arch amd64" to run on an Apple Silicon based Mac.
+
+podman run ${PODMAN_ARCH} --user $(id -u) --rm -it ${VOL_MNT} ${E_PT} ${IMAGE} /src/convert.jsonata /src/example-01.json
